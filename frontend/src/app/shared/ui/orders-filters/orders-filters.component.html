@@ -1,0 +1,22 @@
+<div class="flex flex-column md:flex-row justify-content-end gap-2">
+  <p-dropdown
+    [options]="options | keyvalue"
+    [ngModel]="this.filters().status"
+    (ngModelChange)="setStatus($event)"
+    optionLabel="value"
+    optionValue="value"
+    class="w-full md:w-auto"
+    styleClass="w-full md:w-auto" />
+  <div class="align-self-end md:align-self-auto flex gap-1 align-items-center">
+    <span>{{ 'ordersFilters.reported' | translate }}</span>
+    <p-toggleButton
+      [(ngModel)]="reported"
+      [onLabel]="'global.yes' | translate"
+      [offLabel]="'global.no' | translate" />
+  </div>
+  <button
+    (click)="filter()"
+    pButton
+    [label]="'ordersFilters.filter' | translate"
+    severity="success"></button>
+</div>

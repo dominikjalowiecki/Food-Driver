@@ -1,0 +1,2241 @@
+openapi: '3.1.0'
+info:
+  version: '1.0.0'
+  title: 'Food Driver API'
+  description: System obsługi zamówień online dla restauracji
+servers:
+  - url: http://localhost:3000/api
+    description: Środowisko deweloperskie
+paths:
+  /users/sign-up:
+    post:
+      operationId: SignUp
+      description: Utworzenie konta użytkownika
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  $ref: '#/components/schemas/Name'
+                surname:
+                  $ref: '#/components/schemas/Name'
+                email:
+                  $ref: '#/components/schemas/Email'
+                confirmEmail:
+                  $ref: '#/components/schemas/Email'
+                password:
+                  $ref: '#/components/schemas/Password'
+                confirmPassword:
+                  $ref: '#/components/schemas/Password'
+              required:
+                - name
+                - surname
+                - email
+                - confirmEmail
+                - password
+                - confirmPassword
+              additionalProperties: false
+      responses:
+        '201':
+          $ref: '#/components/responses/Message'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Users
+  /users/activate:
+    post:
+      operationId: ActivateAccount
+      description: Aktywacja konta użytkownika
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  $ref: '#/components/schemas/JWT'
+              required:
+                - token
+              additionalProperties: false
+      responses:
+        '200':
+          $ref: '#/components/responses/Message'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Users
+  /users/reset-password:
+    post:
+      operationId: ResetPassword
+      description: Reset hasła użytkownika
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  $ref: '#/components/schemas/Email'
+              required:
+                - email
+              additionalProperties: false
+      responses:
+        '200':
+          $ref: '#/components/responses/Message'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Users
+  /users/reset-password/confirm:
+    post:
+      operationId: ResetPasswordConfirm
+      description: Potwierdzenie resetu hasła użytkownika
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  $ref: '#/components/schemas/JWT'
+                password:
+                  $ref: '#/components/schemas/Password'
+                confirmPassword:
+                  $ref: '#/components/schemas/Password'
+              required:
+                - token
+                - password
+                - confirmPassword
+              additionalProperties: false
+      responses:
+        '200':
+          $ref: '#/components/responses/Message'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Users
+  /users/sign-in:
+    post:
+      operationId: SignIn
+      description: Logowanie na konto użytkownika
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  $ref: '#/components/schemas/Email'
+                password:
+                  $ref: '#/components/schemas/Password'
+              required:
+                - email
+                - password
+              additionalProperties: false
+      responses:
+        '200':
+          description: Para tokenów autentykacji i odświeżania
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokensPair'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Users
+  /users/refresh:
+    post:
+      operationId: RefreshTokens
+      description: Odświeżanie tokenów autentykacji i odświeżania
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refreshToken:
+                  $ref: '#/components/schemas/JWT'
+              required:
+                - refreshToken
+              additionalProperties: false
+      responses:
+        '200':
+          description: Para tokenów autentykacji i odświeżania
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokensPair'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Users
+  /users/me:
+    get:
+      operationId: GetMe
+      description: Pobieranie danych zalogowanego użytkownika
+      security:
+        - bearerAuth: [Klient]
+      responses:
+        '200':
+          description: Dane użytkownika
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  idUser:
+                    $ref: '#/components/schemas/Id'
+                  name:
+                    $ref: '#/components/schemas/Name'
+                  surname:
+                    $ref: '#/components/schemas/Name'
+                  email:
+                    $ref: '#/components/schemas/Email'
+                  street:
+                    anyOf:
+                      - type: 'null'
+                      - $ref: '#/components/schemas/Name'
+                  building:
+                    anyOf:
+                      - type: 'null'
+                      - $ref: '#/components/schemas/Name'
+                  apartment:
+                    anyOf:
+                      - type: 'null'
+                      - $ref: '#/components/schemas/Name'
+                  postalCode:
+                    anyOf:
+                      - type: 'null'
+                      - $ref: '#/components/schemas/PostalCode'
+                  city:
+                    anyOf:
+                      - type: 'null'
+                      - $ref: '#/components/schemas/Name'
+                  role:
+                    $ref: '#/components/schemas/UserRole'
+                  created:
+                    $ref: '#/components/schemas/DateTime'
+                required:
+                  - idUser
+                  - name
+                  - surname
+                  - email
+                  - street
+                  - building
+                  - apartment
+                  - postalCode
+                  - city
+                  - role
+                  - created
+                additionalProperties: false
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Users
+    put:
+      operationId: UpdateMe
+      description: Edycja danych zalogowanego użytkownika
+      security:
+        - bearerAuth: [Klient]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  $ref: '#/components/schemas/Name'
+                surname:
+                  $ref: '#/components/schemas/Name'
+                street:
+                  $ref: '#/components/schemas/Name'
+                building:
+                  $ref: '#/components/schemas/Name'
+                apartment:
+                  $ref: '#/components/schemas/Name'
+                postalCode:
+                  $ref: '#/components/schemas/PostalCode'
+                city:
+                  $ref: '#/components/schemas/Name'
+              required:
+                - name
+                - surname
+                - street
+                - building
+                - apartment
+                - postalCode
+                - city
+              additionalProperties: false
+      responses:
+        '204':
+          description: Pomyślnie edytowano dane użytkownika
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Users
+  /users/me/subscribe:
+    post:
+      operationId: SubscribePushNotifications
+      description: Dodanie subskrypcji powiadomień Push
+      security:
+        - bearerAuth: [Klient]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '204':
+          description: Pomyślnie dodano subskrypcję powiadomień Push
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Users
+  /users/me/change-password:
+    post:
+      operationId: ChangePassword
+      description: Zmiana hasła do konta użytkownika
+      security:
+        - bearerAuth: [Klient]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                currentPassword:
+                  $ref: '#/components/schemas/Password'
+                newPassword:
+                  $ref: '#/components/schemas/Password'
+                confirmNewPassword:
+                  $ref: '#/components/schemas/Password'
+              required:
+                - currentPassword
+                - newPassword
+                - confirmNewPassword
+              additionalProperties: false
+      responses:
+        '204':
+          description: Pomyślnie zmieniono hasło do konta użytkownika
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Users
+  /users/me/orders:
+    get:
+      operationId: ListMeOrders
+      description: Przegląd zamówień zalogowanego użytkownika
+      security:
+        - bearerAuth: [Klient]
+      parameters:
+        - name: status
+          description: Status zamówienia
+          in: query
+          schema:
+            $ref: '#/components/schemas/OrderStatus'
+          required: false
+        - name: reported
+          description: Zgłoszono problem z zamówieniem
+          in: query
+          schema:
+            type: boolean
+          required: false
+        - name: page
+          description: Numer strony
+          in: query
+          schema:
+            $ref: '#/components/schemas/Page'
+          required: false
+      responses:
+        '200':
+          description: Przegląd zamówień użytkownika
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    minimum: 0
+                  pages:
+                    type: integer
+                    minimum: 1
+                  currentPage:
+                    type: integer
+                    minimum: 1
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        idOrder:
+                          $ref: '#/components/schemas/Id'
+                        restaurant:
+                          type: object
+                          properties:
+                            idRestaurant:
+                              $ref: '#/components/schemas/Id'
+                            name:
+                              $ref: '#/components/schemas/Name'
+                            category:
+                              type: object
+                              properties:
+                                idCategory:
+                                  $ref: '#/components/schemas/Id'
+                                name:
+                                  $ref: '#/components/schemas/Name'
+                              required:
+                                - idCategory
+                                - name
+                              additionalProperties: false
+                          required:
+                            - idRestaurant
+                            - name
+                            - category
+                          additionalProperties: false
+                        status:
+                          $ref: '#/components/schemas/OrderStatus'
+                        payment:
+                          $ref: '#/components/schemas/Price'
+                        reported:
+                          type: boolean
+                        created:
+                          $ref: '#/components/schemas/DateTime'
+                      required:
+                        - idOrder
+                        - restaurant
+                        - status
+                        - payment
+                        - reported
+                        - created
+                      additionalProperties: false
+                required:
+                  - count
+                  - pages
+                  - currentPage
+                  - results
+                additionalProperties: false
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Users
+  /users/me/restaurant:
+    get:
+      operationId: GetMeRestaurant
+      description: Przegląd szczegółów restauracji zalogowanego użytkownika
+      security:
+        - bearerAuth: [Restaurator]
+      responses:
+        '200':
+          description: Przegląd szczegółów restauracji użytkownika
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  idRestaurant:
+                    $ref: '#/components/schemas/Id'
+                  name:
+                    anyOf:
+                      - type: 'null'
+                      - $ref: '#/components/schemas/Name'
+                  description:
+                    anyOf:
+                      - type: 'null'
+                      - $ref: '#/components/schemas/Description'
+                  category:
+                    anyOf:
+                      - type: 'null'
+                      - type: object
+                        properties:
+                          idCategory:
+                            $ref: '#/components/schemas/Id'
+                          name:
+                            $ref: '#/components/schemas/Name'
+                        required:
+                          - idCategory
+                          - name
+                        additionalProperties: false
+                  idImage:
+                    anyOf:
+                      - type: 'null'
+                      - $ref: '#/components/schemas/Id'
+                  image:
+                    anyOf:
+                      - type: 'null'
+                      - $ref: '#/components/schemas/Url'
+                  street:
+                    anyOf:
+                      - type: 'null'
+                      - $ref: '#/components/schemas/Name'
+                  building:
+                    anyOf:
+                      - type: 'null'
+                      - $ref: '#/components/schemas/Name'
+                  apartment:
+                    anyOf:
+                      - type: 'null'
+                      - $ref: '#/components/schemas/Name'
+                  postalCode:
+                    anyOf:
+                      - type: 'null'
+                      - $ref: '#/components/schemas/PostalCode'
+                  city:
+                    anyOf:
+                      - type: 'null'
+                      - $ref: '#/components/schemas/Name'
+                  menu:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        idMenuItem:
+                          $ref: '#/components/schemas/Id'
+                        name:
+                          $ref: '#/components/schemas/Name'
+                        description:
+                          $ref: '#/components/schemas/Description'
+                        price:
+                          $ref: '#/components/schemas/Price'
+                        idImage:
+                          $ref: '#/components/schemas/Id'
+                        image:
+                          $ref: '#/components/schemas/Url'
+                      required:
+                        - idMenuItem
+                        - name
+                        - description
+                        - price
+                        - image
+                      additionalProperties: false
+                required:
+                  - idRestaurant
+                  - name
+                  - description
+                  - category
+                  - image
+                  - street
+                  - building
+                  - apartment
+                  - postalCode
+                  - city
+                  - menu
+                additionalProperties: false
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Users
+    put:
+      operationId: UpdateMeRestaurant
+      description: Edycja danych restauracji zalogowanego użytkownika
+      security:
+        - bearerAuth: [Restaurator]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  $ref: '#/components/schemas/Name'
+                description:
+                  $ref: '#/components/schemas/Description'
+                idCategory:
+                  $ref: '#/components/schemas/Id'
+                idImage:
+                  $ref: '#/components/schemas/Id'
+                street:
+                  $ref: '#/components/schemas/Name'
+                building:
+                  $ref: '#/components/schemas/Name'
+                apartment:
+                  $ref: '#/components/schemas/Name'
+                postalCode:
+                  $ref: '#/components/schemas/PostalCode'
+                city:
+                  $ref: '#/components/schemas/Name'
+              required:
+                - name
+                - description
+                - idCategory
+                - idImage
+                - street
+                - building
+                - apartment
+                - postalCode
+                - city
+              additionalProperties: false
+      responses:
+        '204':
+          description: Pomyślnie edytowano dane restauracji użytkownika
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Users
+  /users/me/restaurant/menu-items:
+    post:
+      operationId: CreateMeRestaurantMenuItem
+      description: Utworzenie pozycji menu
+      security:
+        - bearerAuth: [Restaurator]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  $ref: '#/components/schemas/Name'
+                description:
+                  $ref: '#/components/schemas/Description'
+                price:
+                  $ref: '#/components/schemas/Price'
+                idImage:
+                  $ref: '#/components/schemas/Id'
+              required:
+                - name
+                - description
+                - price
+                - idImage
+              additionalProperties: false
+      responses:
+        '204':
+          description: Pomyślnie utworzono pozycję menu
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Users
+  /users/me/restaurant/menu-items/{id}:
+    parameters:
+      - name: id
+        description: Unikalny identyfikator pozycji menu
+        in: path
+        schema:
+          $ref: '#/components/schemas/Id'
+        required: true
+    put:
+      operationId: UpdateMeRestaurantMenuItem
+      description: Edycja pozycji menu
+      security:
+        - bearerAuth: [Restaurator]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  $ref: '#/components/schemas/Name'
+                description:
+                  $ref: '#/components/schemas/Description'
+                price:
+                  $ref: '#/components/schemas/Price'
+                idImage:
+                  $ref: '#/components/schemas/Id'
+              required:
+                - name
+                - description
+                - price
+                - idImage
+              additionalProperties: false
+      responses:
+        '204':
+          description: Pomyślnie edytowano pozycję menu
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Users
+    delete:
+      operationId: DeleteMeRestaurantMenuItem
+      description: Usunięcie pozycji menu
+      security:
+        - bearerAuth: [Restaurator]
+      responses:
+        '204':
+          description: Pomyślnie usunięto pozycję menu
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Users
+  /users/me/restaurant/orders:
+    get:
+      operationId: ListMeRestaurantOrders
+      description: Przegląd zamówień restauracji
+      security:
+        - bearerAuth: [Restaurator]
+      parameters:
+        - name: status
+          description: Status zamówienia
+          in: query
+          schema:
+            $ref: '#/components/schemas/OrderStatus'
+          required: false
+        - name: reported
+          description: Zgłoszono problem z zamówieniem
+          in: query
+          schema:
+            type: boolean
+          required: false
+        - name: page
+          description: Numer strony
+          in: query
+          schema:
+            $ref: '#/components/schemas/Page'
+          required: false
+      responses:
+        '200':
+          description: Przegląd zamówień restauracji
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    minimum: 0
+                  pages:
+                    type: integer
+                    minimum: 1
+                  currentPage:
+                    type: integer
+                    minimum: 1
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        idOrder:
+                          $ref: '#/components/schemas/Id'
+                        restaurant:
+                          type: object
+                          properties:
+                            idRestaurant:
+                              $ref: '#/components/schemas/Id'
+                            name:
+                              $ref: '#/components/schemas/Name'
+                            category:
+                              type: object
+                              properties:
+                                idCategory:
+                                  $ref: '#/components/schemas/Id'
+                                name:
+                                  $ref: '#/components/schemas/Name'
+                              required:
+                                - idCategory
+                                - name
+                              additionalProperties: false
+                          required:
+                            - idRestaurant
+                            - name
+                            - category
+                          additionalProperties: false
+                        status:
+                          $ref: '#/components/schemas/OrderStatus'
+                        payment:
+                          $ref: '#/components/schemas/Price'
+                        reported:
+                          type: boolean
+                        created:
+                          $ref: '#/components/schemas/DateTime'
+                      required:
+                        - idOrder
+                        - restaurant
+                        - status
+                        - payment
+                        - reported
+                        - created
+                      additionalProperties: false
+                required:
+                  - count
+                  - pages
+                  - currentPage
+                  - results
+                additionalProperties: false
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Users
+  /users/me/deliveries:
+    get:
+      operationId: ListMeDeliveries
+      description: Przegląd dostaw zalogowanego użytkownika
+      security:
+        - bearerAuth: [Dostawca]
+      parameters:
+        - name: status
+          description: Status zamówienia
+          in: query
+          schema:
+            $ref: '#/components/schemas/OrderStatus'
+          required: false
+        - name: reported
+          description: Zgłoszono problem z zamówieniem
+          in: query
+          schema:
+            type: boolean
+          required: false
+        - name: page
+          description: Numer strony
+          in: query
+          schema:
+            $ref: '#/components/schemas/Page'
+          required: false
+      responses:
+        '200':
+          description: Przegląd dostaw użytkownika
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    minimum: 0
+                  pages:
+                    type: integer
+                    minimum: 1
+                  currentPage:
+                    type: integer
+                    minimum: 1
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        idOrder:
+                          $ref: '#/components/schemas/Id'
+                        restaurant:
+                          type: object
+                          properties:
+                            idRestaurant:
+                              $ref: '#/components/schemas/Id'
+                            name:
+                              $ref: '#/components/schemas/Name'
+                            category:
+                              type: object
+                              properties:
+                                idCategory:
+                                  $ref: '#/components/schemas/Id'
+                                name:
+                                  $ref: '#/components/schemas/Name'
+                              required:
+                                - idCategory
+                                - name
+                              additionalProperties: false
+                          required:
+                            - idRestaurant
+                            - name
+                            - category
+                          additionalProperties: false
+                        status:
+                          $ref: '#/components/schemas/OrderStatus'
+                        payment:
+                          $ref: '#/components/schemas/Price'
+                        reported:
+                          type: boolean
+                        created:
+                          $ref: '#/components/schemas/DateTime'
+                      required:
+                        - idOrder
+                        - restaurant
+                        - status
+                        - payment
+                        - reported
+                        - created
+                      additionalProperties: false
+                required:
+                  - count
+                  - pages
+                  - currentPage
+                  - results
+                additionalProperties: false
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Users
+  /users:
+    get:
+      operationId: ListUsers
+      description: Przegląd użytkowników systemu
+      security:
+        - bearerAuth: [Administrator]
+      parameters:
+        - name: search
+          description: Wyszukaj użytkownika
+          in: query
+          schema:
+            type: string
+          required: false
+        - name: page
+          description: Numer strony
+          in: query
+          schema:
+            $ref: '#/components/schemas/Page'
+          required: false
+      responses:
+        '200':
+          description: Przegląd użytkowników systemu
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    minimum: 0
+                  pages:
+                    type: integer
+                    minimum: 1
+                  currentPage:
+                    type: integer
+                    minimum: 1
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        idUser:
+                          $ref: '#/components/schemas/Id'
+                        name:
+                          $ref: '#/components/schemas/Name'
+                        surname:
+                          $ref: '#/components/schemas/Name'
+                        email:
+                          $ref: '#/components/schemas/Email'
+                        role:
+                          $ref: '#/components/schemas/UserRole'
+                        active:
+                          type: boolean
+                        activated:
+                          anyOf:
+                            - type: 'null'
+                            - $ref: '#/components/schemas/DateTime'
+                        created:
+                          $ref: '#/components/schemas/DateTime'
+                      required:
+                        - idUser
+                        - name
+                        - surname
+                        - email
+                        - role
+                        - active
+                        - activated
+                        - created
+                      additionalProperties: false
+                required:
+                  - count
+                  - pages
+                  - currentPage
+                  - results
+                additionalProperties: false
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Users
+  /users/{id}:
+    parameters:
+      - name: id
+        description: Unikalny identyfikator użytkownika
+        in: path
+        schema:
+          $ref: '#/components/schemas/Id'
+        required: true
+    patch:
+      operationId: UpdateUser
+      description: Edycja użytkownika systemu
+      security:
+        - bearerAuth: [Administrator]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                role:
+                  $ref: '#/components/schemas/UserRole'
+                active:
+                  type: boolean
+              required:
+                - role
+                - active
+              additionalProperties: false
+      responses:
+        '204':
+          description: Pomyślnie edytowano użytkownika
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Users
+  /images:
+    post:
+      operationId: CreateImage
+      description: Utworzenie zdjęcia
+      security:
+        - bearerAuth: [Klient]
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
+              required:
+                - image
+              additionalProperties: false
+      responses:
+        '201':
+          description: Pomyślnie utworzono zdjęcie
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  idImage:
+                    $ref: '#/components/schemas/Id'
+                required:
+                  - idImage
+                additionalProperties: false
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Images
+  /categories:
+    get:
+      operationId: ListCategories
+      description: Przegląd kategorii
+      responses:
+        '200':
+          description: Przegląd kategorii
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    idCategory:
+                      $ref: '#/components/schemas/Id'
+                    name:
+                      $ref: '#/components/schemas/Name'
+                  required:
+                    - idCategory
+                    - name
+                  additionalProperties: false
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Categories
+  /restaurants:
+    get:
+      operationId: ListRestaurants
+      description: Przegląd restauracji
+      parameters:
+        - name: lat
+          description: Szerokość geograficzna
+          in: query
+          schema:
+            type: number
+          required: false
+        - name: long
+          description: Długość geograficzna
+          in: query
+          schema:
+            type: number
+          required: false
+        - name: address
+          description: Adres
+          in: query
+          schema:
+            type: string
+          required: false
+        - name: distance
+          description: Dystans (w metrach)
+          in: query
+          schema:
+            type: integer
+            maximum: 10000
+          required: false
+        - name: idCategory
+          description: Unikalny identyfikator kategorii
+          in: query
+          schema:
+            $ref: '#/components/schemas/Id'
+          required: false
+        - name: page
+          description: Numer strony
+          in: query
+          schema:
+            $ref: '#/components/schemas/Page'
+          required: false
+      responses:
+        '200':
+          description: Przegląd restauracji
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    minimum: 0
+                  pages:
+                    type: integer
+                    minimum: 1
+                  currentPage:
+                    type: integer
+                    minimum: 1
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        idRestaurant:
+                          $ref: '#/components/schemas/Id'
+                        name:
+                          $ref: '#/components/schemas/Name'
+                        category:
+                          type: object
+                          properties:
+                            idCategory:
+                              $ref: '#/components/schemas/Id'
+                            name:
+                              $ref: '#/components/schemas/Name'
+                          required:
+                            - idCategory
+                            - name
+                          additionalProperties: false
+                        image:
+                          $ref: '#/components/schemas/Url'
+                      required:
+                        - idRestaurant
+                        - name
+                        - category
+                        - image
+                      additionalProperties: false
+                required:
+                  - count
+                  - pages
+                  - currentPage
+                  - results
+                additionalProperties: false
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Restaurants
+  /restaurants/{id}:
+    parameters:
+      - name: id
+        description: Unikalny identyfikator restauracji
+        in: path
+        schema:
+          $ref: '#/components/schemas/Id'
+        required: true
+    get:
+      operationId: GetRestaurant
+      description: Przegląd szczegółów restauracji
+      responses:
+        '200':
+          description: Przegląd szczegółów restauracji
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  idRestaurant:
+                    $ref: '#/components/schemas/Id'
+                  name:
+                    $ref: '#/components/schemas/Name'
+                  description:
+                    $ref: '#/components/schemas/Description'
+                  category:
+                    type: object
+                    properties:
+                      idCategory:
+                        $ref: '#/components/schemas/Id'
+                      name:
+                        $ref: '#/components/schemas/Name'
+                    required:
+                      - idCategory
+                      - name
+                    additionalProperties: false
+                  image:
+                    $ref: '#/components/schemas/Url'
+                  street:
+                    $ref: '#/components/schemas/Name'
+                  building:
+                    $ref: '#/components/schemas/Name'
+                  apartment:
+                    $ref: '#/components/schemas/Name'
+                  postalCode:
+                    $ref: '#/components/schemas/PostalCode'
+                  city:
+                    $ref: '#/components/schemas/Name'
+                  menu:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        idMenuItem:
+                          $ref: '#/components/schemas/Id'
+                        name:
+                          $ref: '#/components/schemas/Name'
+                        description:
+                          $ref: '#/components/schemas/Description'
+                        price:
+                          $ref: '#/components/schemas/Price'
+                        image:
+                          $ref: '#/components/schemas/Url'
+                      required:
+                        - idMenuItem
+                        - name
+                        - description
+                        - price
+                        - image
+                      additionalProperties: false
+                required:
+                  - idRestaurant
+                  - name
+                  - description
+                  - category
+                  - image
+                  - street
+                  - building
+                  - apartment
+                  - postalCode
+                  - city
+                  - menu
+                additionalProperties: false
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Restaurants
+  /orders:
+    get:
+      operationId: ListOrders
+      description: Przegląd zamówień systemu
+      security:
+        - bearerAuth: [Administrator]
+      parameters:
+        - name: status
+          description: Status zamówienia
+          in: query
+          schema:
+            $ref: '#/components/schemas/OrderStatus'
+          required: false
+        - name: reported
+          description: Zgłoszono problem z zamówieniem
+          in: query
+          schema:
+            type: boolean
+          required: false
+        - name: page
+          description: Numer strony
+          in: query
+          schema:
+            $ref: '#/components/schemas/Page'
+          required: false
+      responses:
+        '200':
+          description: Przegląd zamówień systemu
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    minimum: 0
+                  pages:
+                    type: integer
+                    minimum: 1
+                  currentPage:
+                    type: integer
+                    minimum: 1
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        idOrder:
+                          $ref: '#/components/schemas/Id'
+                        restaurant:
+                          type: object
+                          properties:
+                            idRestaurant:
+                              $ref: '#/components/schemas/Id'
+                            name:
+                              $ref: '#/components/schemas/Name'
+                            category:
+                              type: object
+                              properties:
+                                idCategory:
+                                  $ref: '#/components/schemas/Id'
+                                name:
+                                  $ref: '#/components/schemas/Name'
+                              required:
+                                - idCategory
+                                - name
+                              additionalProperties: false
+                          required:
+                            - idRestaurant
+                            - name
+                            - category
+                          additionalProperties: false
+                        status:
+                          $ref: '#/components/schemas/OrderStatus'
+                        payment:
+                          $ref: '#/components/schemas/Price'
+                        reported:
+                          type: boolean
+                        created:
+                          $ref: '#/components/schemas/DateTime'
+                      required:
+                        - idOrder
+                        - restaurant
+                        - status
+                        - payment
+                        - reported
+                        - created
+                      additionalProperties: false
+                required:
+                  - count
+                  - pages
+                  - currentPage
+                  - results
+                additionalProperties: false
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Orders
+    post:
+      operationId: CreateOrder
+      description: Utworzenie zamówienia
+      security:
+        - bearerAuth: [Klient]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                idRestaurant:
+                  $ref: '#/components/schemas/Id'
+                street:
+                  $ref: '#/components/schemas/Name'
+                building:
+                  $ref: '#/components/schemas/Name'
+                apartment:
+                  $ref: '#/components/schemas/Name'
+                postalCode:
+                  $ref: '#/components/schemas/PostalCode'
+                city:
+                  $ref: '#/components/schemas/Name'
+                menuItems:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      idMenuItem:
+                        $ref: '#/components/schemas/Id'
+                      quantity:
+                        type: integer
+                        minimum: 1
+                    required:
+                      - idMenuItem
+                      - quantity
+                    additionalProperties: false
+                toPay:
+                  $ref: '#/components/schemas/Price'
+              required:
+                - idRestaurant
+                - street
+                - building
+                - apartment
+                - postalCode
+                - city
+                - menuItems
+                - toPay
+              additionalProperties: false
+      responses:
+        '204':
+          description: Pomyślnie utworzono zamówienie
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Orders
+  /orders/{id}:
+    parameters:
+      - name: id
+        description: Unikalny identyfikator zamówienia
+        in: path
+        schema:
+          $ref: '#/components/schemas/Id'
+        required: true
+    get:
+      operationId: GetOrder
+      description: Przegląd szczegółów zamówienia
+      security:
+        - bearerAuth: [Klient]
+      responses:
+        '200':
+          description: Przegląd szczegółów zamówienia
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  idOrder:
+                    $ref: '#/components/schemas/Id'
+                  status:
+                    $ref: '#/components/schemas/OrderStatus'
+                  street:
+                    $ref: '#/components/schemas/Name'
+                  building:
+                    $ref: '#/components/schemas/Name'
+                  apartment:
+                    $ref: '#/components/schemas/Name'
+                  postalCode:
+                    $ref: '#/components/schemas/PostalCode'
+                  city:
+                    $ref: '#/components/schemas/Name'
+                  payment:
+                    $ref: '#/components/schemas/Price'
+                  reported:
+                    type: boolean
+                  created:
+                    $ref: '#/components/schemas/DateTime'
+                  restaurant:
+                    type: object
+                    properties:
+                      idRestaurant:
+                        $ref: '#/components/schemas/Id'
+                      name:
+                        $ref: '#/components/schemas/Name'
+                      category:
+                        type: object
+                        properties:
+                          idCategory:
+                            $ref: '#/components/schemas/Id'
+                          name:
+                            $ref: '#/components/schemas/Name'
+                        required:
+                          - idCategory
+                          - name
+                        additionalProperties: false
+                      image:
+                        $ref: '#/components/schemas/Url'
+                      street:
+                        $ref: '#/components/schemas/Name'
+                      building:
+                        $ref: '#/components/schemas/Name'
+                      apartment:
+                        $ref: '#/components/schemas/Name'
+                      postalCode:
+                        $ref: '#/components/schemas/PostalCode'
+                      city:
+                        $ref: '#/components/schemas/Name'
+                    required:
+                      - idRestaurant
+                      - name
+                      - category
+                      - image
+                      - street
+                      - building
+                      - apartment
+                      - postalCode
+                      - city
+                    additionalProperties: false
+                  client:
+                    type: object
+                    properties:
+                      idUser:
+                        $ref: '#/components/schemas/Id'
+                      name:
+                        $ref: '#/components/schemas/Name'
+                      surname:
+                        $ref: '#/components/schemas/Name'
+                    required:
+                      - idUser
+                      - name
+                      - surname
+                    additionalProperties: false
+                  deliverer:
+                    anyOf:
+                      - type: 'null'
+                      - type: object
+                        properties:
+                          idUser:
+                            $ref: '#/components/schemas/Id'
+                          name:
+                            $ref: '#/components/schemas/Name'
+                          surname:
+                            $ref: '#/components/schemas/Name'
+                        required:
+                          - idUser
+                          - name
+                          - surname
+                        additionalProperties: false
+                  orderItems:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        idOrderItem:
+                          $ref: '#/components/schemas/Id'
+                        name:
+                          $ref: '#/components/schemas/Name'
+                        quantity:
+                          type: integer
+                          minimum: 1
+                        price:
+                          $ref: '#/components/schemas/Price'
+                        image:
+                          $ref: '#/components/schemas/Url'
+                      required:
+                        - idOrderItem
+                        - name
+                        - quantity
+                        - price
+                        - image
+                      additionalProperties: false
+                required:
+                  - idOrder
+                  - status
+                  - street
+                  - building
+                  - apartment
+                  - postalCode
+                  - city
+                  - payment
+                  - reported
+                  - created
+                  - restaurant
+                  - client
+                  - deliverer
+                  - orderItems
+                additionalProperties: false
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Orders
+  /orders/{id}/chat:
+    parameters:
+      - name: id
+        description: Unikalny identyfikator zamówienia
+        in: path
+        schema:
+          $ref: '#/components/schemas/Id'
+        required: true
+    get:
+      operationId: ListChatMessages
+      description: Przegląd wiadomości czatu zamówienia
+      security:
+        - bearerAuth: [Klient]
+      parameters:
+        - name: page
+          description: Numer strony
+          in: query
+          schema:
+            $ref: '#/components/schemas/Page'
+          required: false
+      responses:
+        '200':
+          description: Przegląd wiadomości czatu zamówienia
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    minimum: 0
+                  pages:
+                    type: integer
+                    minimum: 1
+                  currentPage:
+                    type: integer
+                    minimum: 1
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        idMessage:
+                          $ref: '#/components/schemas/Id'
+                        user:
+                          anyOf:
+                            - type: 'null'
+                            - type: object
+                              properties:
+                                idUser:
+                                  $ref: '#/components/schemas/Id'
+                                name:
+                                  $ref: '#/components/schemas/Name'
+                                surname:
+                                  $ref: '#/components/schemas/Name'
+                                role:
+                                  $ref: '#/components/schemas/UserRole'
+                              required:
+                                - idUser
+                                - name
+                                - surname
+                                - role
+                              additionalProperties: false
+                        message:
+                          $ref: '#/components/schemas/Description'
+                        image:
+                          anyOf:
+                            - type: 'null'
+                            - $ref: '#/components/schemas/Url'
+                        type:
+                          $ref: '#/components/schemas/MessageType'
+                        created:
+                          $ref: '#/components/schemas/DateTime'
+                      required:
+                        - idMessage
+                        - user
+                        - message
+                        - image
+                        - type
+                        - created
+                      additionalProperties: false
+                required:
+                  - count
+                  - pages
+                  - currentPage
+                  - results
+                additionalProperties: false
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Orders
+    post:
+      operationId: CreateChatMessage
+      description: Utworzenie wiadomości czatu zamówienia
+      security:
+        - bearerAuth: [Klient]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  $ref: '#/components/schemas/Description'
+                idImage:
+                  $ref: '#/components/schemas/Id'
+              required:
+                - message
+              additionalProperties: false
+      responses:
+        '204':
+          description: Pomyślnie utworzono wiadomość czatu zamówienia
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Orders
+  /orders/{id}/report:
+    parameters:
+      - name: id
+        description: Unikalny identyfikator zamówienia
+        in: path
+        schema:
+          $ref: '#/components/schemas/Id'
+        required: true
+    post:
+      operationId: CreateOrderReport
+      description: Utworzenie zgłoszenia problemu z zamówieniem
+      security:
+        - bearerAuth: [Klient]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  $ref: '#/components/schemas/Description'
+                idImage:
+                  $ref: '#/components/schemas/Id'
+              required:
+                - message
+              additionalProperties: false
+      responses:
+        '204':
+          description: Pomyślnie utworzono zgłoszenie problemu z zamówieniem
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Orders
+  /orders/{id}/cancel:
+    parameters:
+      - name: id
+        description: Unikalny identyfikator zamówienia
+        in: path
+        schema:
+          $ref: '#/components/schemas/Id'
+        required: true
+    post:
+      operationId: CancelOrder
+      description: Anulowanie zamówienia
+      security:
+        - bearerAuth: [Restaurator, Administrator]
+      responses:
+        '204':
+          description: Pomyślnie anulowano zamówienie
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Orders
+  /orders/{id}/resign:
+    parameters:
+      - name: id
+        description: Unikalny identyfikator zamówienia
+        in: path
+        schema:
+          $ref: '#/components/schemas/Id'
+        required: true
+    post:
+      operationId: ResignToDeliverOrder
+      description: Rezygnacja z dostarczenia zamówienia
+      security:
+        - bearerAuth: [Dostawca, Administrator]
+      responses:
+        '204':
+          description: Pomyślnie zrezygnowano z dostarczenia zamówienia
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Orders
+  /orders/{id}/accept-for-realization:
+    parameters:
+      - name: id
+        description: Unikalny identyfikator zamówienia
+        in: path
+        schema:
+          $ref: '#/components/schemas/Id'
+        required: true
+    post:
+      operationId: AcceptOrderForRealization
+      description: Przyjęcie zamówienia do realizacji
+      security:
+        - bearerAuth: [Restaurator]
+      responses:
+        '204':
+          description: Pomyślnie przyjęto zamówienie do realizacji
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Orders
+  /orders/{id}/ready-for-delivery:
+    parameters:
+      - name: id
+        description: Unikalny identyfikator zamówienia
+        in: path
+        schema:
+          $ref: '#/components/schemas/Id'
+        required: true
+    post:
+      operationId: OrderReadyForDelivery
+      description: Przygotowanie zamówienia do dostawy
+      security:
+        - bearerAuth: [Restaurator]
+      responses:
+        '204':
+          description: Pomyślnie przygotowano zamówienie do dostawy
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Orders
+  /orders/{id}/picked-up-for-delivery:
+    parameters:
+      - name: id
+        description: Unikalny identyfikator zamówienia
+        in: path
+        schema:
+          $ref: '#/components/schemas/Id'
+        required: true
+    post:
+      operationId: OrderPickedUpForDelivery
+      description: Odebranie zamówienia do dostarczenia
+      security:
+        - bearerAuth: [Dostawca]
+      responses:
+        '204':
+          description: Pomyślnie odebrano zamówienie do dostarczenia
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Orders
+  /orders/{id}/delivered:
+    parameters:
+      - name: id
+        description: Unikalny identyfikator zamówienia
+        in: path
+        schema:
+          $ref: '#/components/schemas/Id'
+        required: true
+    post:
+      operationId: OrderDelivered
+      description: Dostarczenie zamówienia
+      security:
+        - bearerAuth: [Dostawca]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                idImage:
+                  $ref: '#/components/schemas/Id'
+              required:
+                - idImage
+              additionalProperties: false
+      responses:
+        '204':
+          description: Pomyślnie dostarczono zamówienie
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Orders
+  /orders/{id}/realized:
+    parameters:
+      - name: id
+        description: Unikalny identyfikator zamówienia
+        in: path
+        schema:
+          $ref: '#/components/schemas/Id'
+        required: true
+    post:
+      operationId: OrderRealized
+      description: Potwierdzenie realizacji zamówienia
+      security:
+        - bearerAuth: [Klient]
+      responses:
+        '204':
+          description: Pomyślnie potwierdzono realizację zamówienia
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Orders
+  /deliveries:
+    get:
+      operationId: ListDeliveries
+      description: Przegląd dostępnych dostaw
+      security:
+        - bearerAuth: [Dostawca]
+      parameters:
+        - name: lat
+          description: Szerokość geograficzna
+          in: query
+          schema:
+            type: number
+          required: false
+        - name: long
+          description: Długość geograficzna
+          in: query
+          schema:
+            type: number
+          required: false
+        - name: distance
+          description: Dystans (w metrach)
+          in: query
+          schema:
+            type: integer
+            maximum: 10000
+          required: false
+        - name: page
+          description: Numer strony
+          in: query
+          schema:
+            $ref: '#/components/schemas/Page'
+          required: false
+      responses:
+        '200':
+          description: Przegląd dostepnych dostaw
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    minimum: 0
+                  pages:
+                    type: integer
+                    minimum: 1
+                  currentPage:
+                    type: integer
+                    minimum: 1
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        idOrder:
+                          $ref: '#/components/schemas/Id'
+                        restaurant:
+                          type: object
+                          properties:
+                            idRestaurant:
+                              $ref: '#/components/schemas/Id'
+                            name:
+                              $ref: '#/components/schemas/Name'
+                            category:
+                              type: object
+                              properties:
+                                idCategory:
+                                  $ref: '#/components/schemas/Id'
+                                name:
+                                  $ref: '#/components/schemas/Name'
+                              required:
+                                - idCategory
+                                - name
+                              additionalProperties: false
+                          required:
+                            - idRestaurant
+                            - name
+                            - category
+                          additionalProperties: false
+                        status:
+                          $ref: '#/components/schemas/OrderStatus'
+                        payment:
+                          $ref: '#/components/schemas/Price'
+                        reported:
+                          type: boolean
+                        created:
+                          $ref: '#/components/schemas/DateTime'
+                      required:
+                        - idOrder
+                        - restaurant
+                        - status
+                        - payment
+                        - reported
+                        - created
+                      additionalProperties: false
+                required:
+                  - count
+                  - pages
+                  - currentPage
+                  - results
+                additionalProperties: false
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Deliveries
+  /deliveries/{id}/realize:
+    parameters:
+      - name: id
+        description: Unikalny identyfikator zamówienia
+        in: path
+        schema:
+          $ref: '#/components/schemas/Id'
+        required: true
+    post:
+      operationId: RealizeDelivery
+      description: Przyjęcie dostawy do realizacji
+      security:
+        - bearerAuth: [Dostawca]
+      responses:
+        '204':
+          description: Pomyślnie przyjęto dostawę do realizacji
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        default:
+          $ref: '#/components/responses/InternalServerError'
+      tags:
+        - Deliveries
+components:
+  responses:
+    Message:
+      description: Odpowiedź serwera z komunikatem dla użytkownika
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Info'
+    BadRequest:
+      description: Nieprawidłowa treść żądania
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Nieprawidłowy token autentykacji
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: Użytkownik nie może wykonać tej akcji
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Nie znaleziono żądanego zasobu
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InternalServerError:
+      description: Wystąpił wewnętrzny błąd serwera
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Page:
+      description: Numer strony
+      type: integer
+      minimum: 1
+    Id:
+      description: Unikalny identyfikator
+      type: integer
+    JWT:
+      description: JSON Web token
+      type: string
+      minLength: 1
+    Name:
+      type: string
+      minLength: 1
+      maxLength: 200
+    Description:
+      type: string
+      minLength: 1
+      maxLength: 3000
+    Url:
+      type: string
+      format: url
+      maxLength: 2048
+    Email:
+      type: string
+      format: email
+      maxLength: 320
+    Password:
+      type: string
+      minLength: 8
+    Price:
+      type: string
+      format: ^\d+(.\d{1,2})?$
+    PostalCode:
+      type: string
+      pattern: ^\d{2}-\d{3}$
+    DateTime:
+      type: string
+      format: date-time
+    UserRole:
+      type: string
+      enum:
+        - Klient
+        - Restaurator
+        - Dostawca
+        - Administrator
+    OrderStatus:
+      type: string
+      enum:
+        - Nowe
+        - Przyjęte do realizacji
+        - Gotowe do dostawy
+        - Odebrane do dostarczenia
+        - Dostarczone
+        - Zrealizowane
+        - Anulowane
+    MessageType:
+      type: string
+      enum:
+        - Status
+        - Zgłoszenie
+        - Wiadomość
+    TokensPair:
+      type: object
+      properties:
+        authenticationToken:
+          $ref: '#/components/schemas/JWT'
+        refreshToken:
+          $ref: '#/components/schemas/JWT'
+      required:
+        - authenticationToken
+        - refreshToken
+      additionalProperties: false
+    Info:
+      type: object
+      properties:
+        message:
+          description: Komunikat dla użytkownika
+          type: string
+      required:
+        - message
+      additionalProperties: false
+    Error:
+      type: object
+      properties:
+        message:
+          description: Komunikat dla użytkownika
+          type: string
+      required:
+        - message
+      additionalProperties: false
+  securitySchemes:
+    bearerAuth:
+      description: Token na okaziciela JWT
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

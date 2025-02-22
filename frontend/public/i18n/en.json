@@ -1,0 +1,173 @@
+{
+  "global": {
+    "search": "Search",
+    "error": "Error",
+    "success": "Success",
+    "mainPage": "Main page",
+    "back": "Back",
+    "choose": "Choose",
+    "delete": "Delete",
+    "add": "Dodaj",
+    "yes": "Yes",
+    "no": "No",
+    "confirmAction": "Are you sure?",
+    "address": "Address",
+    "amount": "Amount",
+    "cart": "Cart",
+    "client": "Client",
+    "accessForbidden": "Forbidden access",
+    "notFound": "Page not found",
+    "empty": "No items"
+  },
+  "filters": {
+    "chooseCategory": "Choose category..."
+  },
+  "header": {
+    "login": "Login",
+    "register": "Sign-up",
+    "logout": "Log-out",
+    "account": "Account"
+  },
+  "restaurants": {
+    "dialogHeader": "Restaurants"
+  },
+  "forms": {
+    "email": "E-mail",
+    "password": "Password",
+    "submit": "Submit",
+    "required": "Field is required",
+    "name": "Name",
+    "surname": "Surname",
+    "street": "Street",
+    "building": "Building",
+    "apartment": "Apartment",
+    "postalCode": "Postal code",
+    "city": "City",
+    "confirmEmail": "Confirm e-mail",
+    "confirmPassword": "Confirm password",
+    "notMatch": "Fields are different",
+    "cancel": "Cancel",
+    "edit": "Edit"
+  },
+  "signUp": {
+    "header": "Sign up",
+    "success": "Account has been created. Check out your e-mail!"
+  },
+  "login": {
+    "forgetPassword": "Forget password"
+  },
+  "orders": {
+    "myOrders": "My orders",
+    "orderDetails": "Order details",
+    "items": "Ordered meals",
+    "report": "Report",
+    "cancel": "Cancel",
+    "acceptForRealize": "Accept for realize ",
+    "readyForDelivery": "Ready for delivery",
+    "pickUpForDelivery": "Pick up for delivery",
+    "delivered": "Delivered",
+    "realized": "Realized",
+    "deliveryRealize": "Realize delivery",
+    "deliverer": "Deliverer"
+  },
+  "errors": {
+    "default": "Unknown error",
+    "badRequest": "Bad request",
+    "unauthorized": "Unauthorized",
+    "forbiddenAccess": "Forbidden access"
+  },
+  "activateAccount": {
+    "title": "Activate account",
+    "success": "Account has been activated!",
+    "error": "Error with account activation"
+  },
+  "changePassword": {
+    "change": "Change",
+    "success": "Password has been changed",
+    "newPassword": "New Password",
+    "confirmNewPassword": "Confirm new password"
+  },
+  "personalData": {
+    "update": "Update",
+    "success": "User profile has been updated"
+  },
+  "updateMe": {
+    "success": "Personal data has been changed"
+  },
+  "sidebar": {
+    "account": "Account",
+    "myAccount": "My account",
+    "changePassword": "Change password",
+    "orders": "Orders",
+    "myOrders": "My orders",
+    "restaurant": "Restaurant",
+    "myRestaurant": "My restaurant",
+    "myMenu": "My menu",
+    "restaurantOrders": "Orders",
+    "myDeliveries": "My deliveries",
+    "operations": "Operations",
+    "users": "Users",
+    "resign": "Resign from delivery"
+  },
+  "passwordReset": {
+    "send": "Password has been reset! Check out your e-mail to continue this process",
+    "title": "Reset password",
+    "success": "Password has been reset"
+  },
+  "myRestaurant": {
+    "name": "Name",
+    "description": "Description",
+    "category": "Category",
+    "street": "Street",
+    "building": "Building",
+    "apartment": "Apartment",
+    "postalCode": "Postal code",
+    "city": "City"
+  },
+  "myMenu": {
+    "addItemTitle": "Add item",
+    "name": "Name",
+    "price": "Price",
+    "description": "Description",
+    "editMenu": "Edit menu"
+  },
+  "restaurantOrders": {
+    "status": "Status",
+    "payment": "Payment",
+    "reported": "Reported",
+    "created": "Created",
+    "restaurantName": "Restaurant name",
+    "categoryName": "Category"
+  },
+  "restaurant": { "howMany": "How many?" },
+  "cart": {
+    "empty": "Empty cart",
+    "continue": "Continue",
+    "addressForm": "Delivery address",
+    "finalize": "Finalize",
+    "success": "Order has been created",
+    "sum": "Sum"
+  },
+  "ordersFilters": {
+    "reported": "Reported?",
+    "filter": "Filter"
+  },
+  "chat": {
+    "addImage": "Add image",
+    "addMessage": "Add message"
+  },
+  "deliveries": { "dialogHeader": "Deliveries" },
+  "users": {
+    "name": "Name",
+    "surname": "Surname",
+    "email": "E-mail",
+    "role": "Role",
+    "active": "Active",
+    "activated": "Activated",
+    "created": "Created"
+  },
+  "report": {
+    "success": "Report has been send",
+    "dialogTitle": "Report order"
+  }
+}

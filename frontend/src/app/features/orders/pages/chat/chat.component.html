@@ -1,0 +1,85 @@
+<div class="sticky top-0 bg-white z-3">
+  <span class="text-2xl text-center w-full inline-block mt-4">Chat</span>
+  <p-divider />
+</div>
+<div
+  [style]="{ height: '80vh' }"
+  class="overflow-hidden px-4 md:px-0 md:mx-auto w-12 md:w-6">
+  <div
+    class="max-h-full overflow-y-auto"
+    #scroller
+    infiniteScroll
+    [infiniteScrollUpDistance]="1.5"
+    [infiniteScrollThrottle]="50"
+    [infiniteScrollContainer]="scroller"
+    (scrolledUp)="loadMessages()">
+    @for (item of result(); track $index) {
+    <div class="p-2">
+      <p-panel>
+        <ng-template pTemplate="header">
+          <p-tag severity="secondary">{{ item.type }}</p-tag>
+          <div
+            class="ml-2 flex w-full"
+            [ngClass]="
+              item.user
+                ? item.user.idUser == userId
+                  ? 'justify-content-start'
+                  : 'justify-content-end'
+                : ''
+            ">
+            <span class="text-lg font-bold">
+              {{ item.user ? item.user.name + ' ' + item.user.surname : '' }}
+            </span>
+          </div>
+        </ng-template>
+        <div class="relative flex-column gap-2">
+          <p [style]="{ overflowWrap: 'break-word' }">{{ item.message }}</p>
+          @if (item.image) {
+          <p-image [preview]="true" width="100" [src]="item.image" />
+          }
+        </div>
+        <ng-template pTemplate="footer">
+          <div class="flex justify-content-end">
+            <span class="text-sm">{{ item.created | date : 'short' }}</span>
+          </div>
+        </ng-template>
+      </p-panel>
+    </div>
+    } @empty {
+    <div class="flex flex-column align-items-center gap-1">
+      <span class="pi pi-envelope text-4xl"></span>
+      <span class="font-italic font-light">Brak koresondencji</span>
+    </div>
+    }
+  </div>
+</div>
+<div
+  class="fixed bottom-0 w-full surface-50 p-3 md:p-2 flex justify-content-center gap-2">
+  <p-inputGroup class="w-12 md:w-6">
+    <button
+      severity="primary"
+      (click)="openImageImport()"
+      pButton
+      icon="pi pi-plus"></button>
+    <input
+      pInputText
+      [formControl]="message"
+      [placeholder]="('chat.addMessage' | translate) + '...'" />
+    <button
+      (click)="sendMessage()"
+      [loading]="status() === 'message-sending'"
+      [disabled]="message.invalid"
+      severity="success"
+      pButton
+      icon="pi pi-send"></button>
+  </p-inputGroup>
+</div>
+<p-dialog
+  [(visible)]="visible"
+  [closable]="true"
+  [header]="'chat.addImage' | translate"
+  [modal]="true">
+  <app-image-upload
+    [(previewSrc)]="previewSrc"
+    (onUploadSuccess)="setImage($event)"></app-image-upload>
+</p-dialog>

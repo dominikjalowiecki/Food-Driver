@@ -1,0 +1,59 @@
+<div class="h-full flex flex-column gap-2">
+  <div class="w-full flex justify-content-end">
+    <button
+      pButton
+      severity="info"
+      [label]="'global.add' | translate"
+      (click)="addMenuItem()"></button>
+  </div>
+  <div class="grid">
+    @if(status() !== 'loading'){ @for (item of menu(); track $index; let last =
+    $last) {
+    <div class="col-12 md:col-6">
+      <p-card [header]="item.name">
+        <ng-template pTemplate="header">
+          <p-image
+            height="300"
+            styleClass="w-full"
+            [preview]="true"
+            alt="Card"
+            [src]="item.image || 'filler.png'" />
+        </ng-template>
+        <div>
+          <span class="text-lg"
+            >{{ 'myMenu.price' | translate }}: {{ item.price }} zł</span
+          >
+          <p [style]="{ wordBreak: 'break-words' }">{{ item.description }}</p>
+        </div>
+        <ng-template pTemplate="footer">
+          <div class="flex justify-content-end gap-2">
+            <button
+              pButton
+              severity="secondary"
+              (click)="editItem(item)"
+              [label]="'forms.edit' | translate"></button>
+            <button
+              (click)="showConfirm(confirmOverlay, $event, item)"
+              pButton
+              severity="danger"
+              [label]="'global.delete' | translate"></button>
+          </div>
+        </ng-template>
+      </p-card>
+    </div>
+    }@empty {
+    <span class="inline-block w-full text-center text-lg">{{
+      'global.empty' | translate
+    }}</span>
+    } } @else {
+    <p-progressBar
+      [style]="{ height: '6px' }"
+      [mode]="'indeterminate'"
+      class="w-full" />
+    }
+  </div>
+</div>
+<app-confirm-overlay
+  #confirmOverlay
+  [status]="status()"
+  (onDeleteItem)="deleteItem()" />

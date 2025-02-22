@@ -1,0 +1,83 @@
+<p-dialog
+  [style]="{ width: '50vw' }"
+  [header]="'global.cart' | translate"
+  [breakpoints]="{ '1199px': '70vw', '575px': '90vw' }"
+  [modal]="true"
+  [(visible)]="visible">
+  <p-stepper #stepper [linear]="true">
+    <p-stepperPanel [header]="'global.cart' | translate">
+      <ng-template pTemplate="content" let-nextCallback="nextCallback">
+        <app-menu-item-list
+          idName="idMenuItem"
+          [emptyMessage]="'cart.empty' | translate"
+          [items]="cart()"
+          [showActions]="true"
+          (onRemove)="onRemoveItemFromCart.emit($event)"></app-menu-item-list>
+        <div class="w-full mt-2 flex justify-content-end">
+          <button
+            [disabled]="cart().length === 0"
+            pButton
+            severity="success"
+            [label]="'cart.continue' | translate"
+            (click)="nextCallback.emit()"></button>
+        </div>
+      </ng-template>
+    </p-stepperPanel>
+    <p-stepperPanel [header]="'cart.addressForm' | translate">
+      <ng-template pTemplate="content" let-prevCallback="prevCallback">
+        <form [formGroup]="addressForm" class="formgrid grid">
+          <div class="field col-12 md:col-6">
+            <label for="street">{{ 'forms.street' | translate }}</label>
+            <input class="w-full" pInputText formControlName="street" />
+          </div>
+          <div class="field col-12 md:col-6">
+            <label for="building">{{ 'forms.building' | translate }}</label>
+            <p-inputNumber
+              class="inline-block w-full"
+              styleClass="w-full"
+              formControlName="building" />
+          </div>
+          <div class="field col-12 md:col-6">
+            <label for="apartment">{{ 'forms.apartment' | translate }}</label>
+            <p-inputNumber
+              class="inline-block w-full"
+              styleClass="w-full"
+              formControlName="apartment" />
+          </div>
+          <div class="field col-12 md:col-6">
+            <label for="postalCode">{{ 'forms.postalCode' | translate }}</label>
+            <p-inputMask
+              mask="99-999"
+              placeholder="xx-xxx"
+              class="inline-block w-full"
+              styleClass="w-full"
+              formControlName="postalCode" />
+          </div>
+          <div class="field col-12 md:col-6">
+            <label for="city">{{ 'forms.city' | translate }}</label>
+            <input class="w-full" pInputText formControlName="city" />
+          </div>
+          <div
+            class="col-12 border-y-1 surface-border py-2 flex justify-content-end">
+            <div class="flex flex-column align-items-end gap-2">
+              <span class="font-bold">{{ 'cart.sum' | translate }}</span>
+              <span>{{ sum() | currency }}</span>
+            </div>
+          </div>
+          <div class="mt-2 col-12 flex justify-content-between">
+            <button
+              type="button"
+              pButton
+              icon="pi pi-arrow-left"
+              (click)="prevCallback.emit()"></button>
+            <button
+              (click)="finalize($event)"
+              pButton
+              [label]="'cart.finalize' | translate"
+              severity="success"></button>
+          </div>
+        </form>
+      </ng-template>
+    </p-stepperPanel>
+  </p-stepper>
+</p-dialog>

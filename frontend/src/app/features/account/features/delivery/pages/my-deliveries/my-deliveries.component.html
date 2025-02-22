@@ -1,0 +1,5 @@
+<app-orders-filters [filters]="filters()" (onFilter)="filter($event)" />
+<app-orders-table
+  [orders]="orders()"
+  [status]="status()"
+  (onPage)="changePage($event)" />

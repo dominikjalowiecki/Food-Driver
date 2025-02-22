@@ -1,0 +1,150 @@
+@let orderData = order(); @if (orderData) { @if(orderData.deliverer){
+<div class="sticky top-0 w-full p-2 surface-100 flex justify-content-center">
+  {{ 'orders.deliverer' | translate }}:
+  {{ orderData.deliverer.name + ' ' + orderData.deliverer.surname }}
+</div>
+}
+<div
+  class="sticky z-3 top-0 w-full p-2 surface-50 flex flex-wrap justify-content-end gap-2">
+  @if(role === roles.Restaurator || role === roles.Klient || role ===
+  roles.Administrator ){
+  <button class="mr-auto" pButton [routerLink]="['chat']" label="Chat"></button>
+  } @if(role === roles.Restaurator || role === roles.Administrator){
+  <button
+    (click)="cancel($event)"
+    [disabled]="
+      role === roles.Restaurator ? orderData.status !== status.Nowe : false
+    "
+    pButton
+    severity="danger"
+    [label]="'orders.cancel' | translate"></button>
+  } @switch (role) { @case (roles.Klient) {
+  <button
+    (click)="realized($event)"
+    [disabled]="orderData.status !== status.Dostarczone"
+    pButton
+    severity="success"
+    [label]="'orders.realized' | translate"></button>
+  } @case (roles.Restaurator) {
+  <button
+    (click)="acceptForRealize($event)"
+    [disabled]="orderData.status !== status.Nowe"
+    pButton
+    severity="success"
+    [label]="'orders.acceptForRealize' | translate"></button>
+  <button
+    (click)="readyToDelivery($event)"
+    [disabled]="orderData.status !== status.PrzyjteDoRealizacji"
+    pButton
+    severity="success"
+    [label]="'orders.readyForDelivery' | translate"></button>
+  } @case (roles.Dostawca) { @if (orderData.deliverer == null) {
+  <button
+    (click)="realize($event)"
+    pButton
+    severity="primary"
+    [label]="'orders.deliveryRealize' | translate"></button>
+  } @if(orderData.deliverer?.idUser === user()?.idUser && orderData.status ===
+  status.GotoweDoDostawy){
+  <button
+    (click)="resign($event)"
+    pButton
+    severity="danger"
+    [label]="'orders.resign' | translate"></button>
+  } @if (orderData.status === status.GotoweDoDostawy &&
+  orderData.deliverer?.idUser === user()?.idUser) {
+  <button
+    (click)="pickUpForDelivery($event)"
+    pButton
+    severity="success"
+    [label]="'orders.pickUpForDelivery' | translate"></button>
+  } @if (orderData.status === status.OdebraneDoDostarczenia) {
+  <button
+    (click)="imageDialogVisible = true"
+    pButton
+    severity="success"
+    [label]="'orders.delivered' | translate"></button>
+
+  } } }
+  <p-confirmPopup />
+</div>
+<div
+  class="lg:h-screen pb-6 lg:pb-0 mx-4 lg:mx-0 flex flex-column lg:flex-row gap-2">
+  <div class="lg:ml-4 mt-2 flex flex-column gap-2">
+    <app-restaurant-panel [restaurant]="orderData.restaurant" />
+    <p-fieldset [legend]="'global.client' | translate">
+      <div class="grid">
+        @for (data of client; track $index) {
+        <p-panel [header]="'forms.' + data | translate" class="col-12 md:col-6">
+          {{ orderData.client[data] }}
+        </p-panel>
+        }
+      </div>
+    </p-fieldset>
+  </div>
+  <p-divider class="hidden lg:block" layout="vertical" />
+  <div class="mt-2 flex-1">
+    <p-fieldset [legend]="'orders.orderDetails' | translate">
+      <div class="grid lg:align-items-center">
+        @for(detail of details; track $index){
+        <p-panel
+          class="col-12 md:col-6"
+          [header]="'restaurantOrders.' + detail | translate">
+          @switch (detail) { @case ('created'){
+          {{ orderData[detail] | date : 'short' }}
+
+          } @case ('payment'){
+          {{ orderData[detail] | currency }}
+          } @case ('reported'){
+          <div class="flex gap-1 justify-content-between align-items-center">
+            <p-tag [severity]="orderData[detail] ? 'danger' : 'success'">{{
+              (orderData[detail] ? 'global.yes' : 'global.no') | translate
+            }}</p-tag>
+            @if(role === roles.Klient){
+            <button
+              (click)="createReport()"
+              size="small"
+              pButton
+              severity="warning"
+              [label]="'orders.report' | translate"
+              [disabled]="orderData.reported"></button>
+            }
+          </div>
+          } @default{
+
+          {{ orderData[detail] }}
+          } }
+        </p-panel>
+        }
+      </div>
+    </p-fieldset>
+    <p-fieldset [legend]="'cart.addressForm' | translate">
+      <div class="grid lg:align-items-center">
+        @for (data of deliveryAddress; track $index) {
+        <p-panel
+          class="col-12 md:col-6"
+          [header]="'forms.' + data | translate"
+          >{{ orderData[data] }}</p-panel
+        >
+        }
+      </div>
+    </p-fieldset>
+  </div>
+  <p-divider class="hidden lg:block" layout="vertical" />
+  <div class="lg:mt-2 lg:mr-4">
+    <p-fieldset [legend]="'orders.items' | translate">
+      <app-menu-item-list
+        [items]="orderData.orderItems"
+        idName="idOrderItem"
+        [emptyMessage]="'orders.empty'" />
+    </p-fieldset>
+  </div>
+</div>
+}
+<p-dialog
+  [header]="'chat.addImage' | translate"
+  [(visible)]="imageDialogVisible"
+  [modal]="true"
+  [style]="{ minWidth: '40vw' }">
+  <app-image-upload (onUploadSuccess)="delivered($event)" />
+</p-dialog>

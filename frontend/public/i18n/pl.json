@@ -1,0 +1,173 @@
+{
+  "global": {
+    "search": "Szukaj",
+    "error": "Błąd",
+    "success": "Sukces",
+    "mainPage": "Strona główna",
+    "back": "Powrót",
+    "choose": "Wybierz",
+    "delete": "Usuń",
+    "add": "Dodaj",
+    "yes": "Tak",
+    "no": "Nie",
+    "confirmAction": "Czy jesteś pewny?",
+    "address": "Adres",
+    "amount": "Ilość",
+    "cart": "Koszyk",
+    "client": "Klient",
+    "accessForbidden": "Dostęp zabroniony",
+    "notFound": "Strona nieznaleziona",
+    "empty": "Brak pozycji"
+  },
+  "filters": {
+    "chooseCategory": "Wybierz kategorię..."
+  },
+  "header": {
+    "login": "Zaloguj",
+    "register": "Rejestracja",
+    "logout": "Wyloguj",
+    "account": "Konto"
+  },
+  "restaurants": {
+    "dialogHeader": "Restauracje"
+  },
+  "forms": {
+    "email": "E-mail",
+    "password": "Hasło",
+    "submit": "Potwierdź",
+    "required": "Pole jest wymagane",
+    "name": "Imię",
+    "surname": "Nazwisko",
+    "street": "Ulica",
+    "building": "Dom",
+    "apartment": "Mieszkanie",
+    "postalCode": "Kod pocztowy",
+    "city": "Miasto",
+    "confirmEmail": "Potwierdź e-mail",
+    "confirmPassword": "Potwierdź hasło",
+    "notMatch": "Pola są różne",
+    "cancel": "Anuluj",
+    "edit": "Edytuj"
+  },
+  "signUp": {
+    "header": "Rejestracja",
+    "success": "Konto zostało utworzone. Zobacz swoją skrzynke e-mail!"
+  },
+  "login": {
+    "forgetPassword": "Zapomniałem hasła"
+  },
+  "orders": {
+    "myOrders": "Moje zamówienia",
+    "orderDetails": "Szczegóły zamówienia",
+    "items": "Zamówione posiłki",
+    "report": "Zgłoś",
+    "cancel": "Zrezygnuj",
+    "acceptForRealize": "Przyjmij do realizacji",
+    "readyForDelivery": "Gotowa do dostarczenia",
+    "pickUpForDelivery": "Przyjmij do dostarczenia",
+    "delivered": "Dostarczona",
+    "realized": "Zrealizowano",
+    "resign": "Zrezygnuj z dostawy",
+    "deliveryRealize": "Realizuj dostawe",
+    "deliverer": "Kurier"
+  },
+  "errors": {
+    "default": "Nieznany błąd",
+    "badRequest": "Podano błędne dane",
+    "unauthorized": "Brak autoryzacji",
+    "forbiddenAccess": "Dostęp zabroniony"
+  },
+  "activateAccount": {
+    "title": "Aktywacja konta",
+    "success": "Konto zostało aktywowane!",
+    "error": "Błąd aktywacji konta"
+  },
+  "changePassword": {
+    "change": "Zmień",
+    "success": "Udało się zmienić hasło",
+    "newPassword": "Nowe hasło",
+    "confirmNewPassword": "Powtórz nowe hasło"
+  },
+  "personalData": {
+    "update": "Aktualizuj",
+    "success": "Konto zostało zaktualizowane"
+  },
+  "updateMe": {
+    "success": "Udało sie zaktualizować dane"
+  },
+  "sidebar": {
+    "account": "Konto",
+    "myAccount": "Moje konto",
+    "changePassword": "Zmień hasło",
+    "orders": "Zamówienia",
+    "myOrders": "Moje zamówienia",
+    "restaurant": "Restauracja",
+    "myRestaurant": "Moja restauracja",
+    "myMenu": "Moje menu",
+    "restaurantOrders": "Zamówienia",
+    "myDeliveries": "Moje dostawy",
+    "operations": "Operacje",
+    "users": "Użytkownicy"
+  },
+  "passwordReset": {
+    "send": "Hasło zresetowano! Zajrzyj na skrzynkę e-mail i dokończ reset hasła",
+    "title": "Resetowanie hasła",
+    "success": "Udało się zresetować hasło"
+  },
+  "myRestaurant": {
+    "name": "Nazwa",
+    "description": "Opis",
+    "category": "Kategoria",
+    "street": "Ulica",
+    "building": "Dom",
+    "apartment": "Mieszkanie",
+    "postalCode": "Kod pocztowy",
+    "city": "Miasto"
+  },
+  "myMenu": {
+    "addItemTitle": "Dodaj pozycje",
+    "name": "Nazwa",
+    "price": "Cena",
+    "description": "Opis",
+    "editMenu": "Edytuj menu"
+  },
+  "restaurantOrders": {
+    "status": "Status",
+    "payment": "Płatność",
+    "reported": "Zgłoszony",
+    "created": "Stworzony",
+    "restaurantName": "Nazwa restauracji",
+    "categoryName": "Kategoria"
+  },
+  "restaurant": { "howMany": "Ile sztuk?" },
+  "cart": {
+    "empty": "Pusty koszyk",
+    "continue": "Kontynuuj",
+    "addressForm": "Dane dostawy",
+    "finalize": "Finalizuj",
+    "success": "Zamówienie zostało utworzone",
+    "sum": "Suma"
+  },
+  "ordersFilters": {
+    "reported": "Zgłoszony?",
+    "filter": "Filtruj"
+  },
+  "chat": {
+    "addImage": "Dodaj zdjęcie",
+    "addMessage": "Dodaj wiadomość"
+  },
+  "deliveries": { "dialogHeader": "Dostawy" },
+  "users": {
+    "name": "Imię",
+    "surname": "Nazwisko",
+    "email": "E-mail",
+    "role": "Rola",
+    "active": "Aktywny",
+    "activated": "Aktywowano",
+    "created": "Stworzony"
+  },
+  "report": {
+    "success": "Udało się wysłać zgłoszenie",
+    "dialogTitle": "Zgłoś zamówienie"
+  }
+}

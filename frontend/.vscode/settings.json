@@ -1,0 +1,9 @@
+{
+  "editor.formatOnSave": true,
+  "angular-schematics.schematicsDefaultOptions": {
+    "angular-*": {
+      "externalTemplate": true,
+      "style": "css"
+    }
+  }
+}

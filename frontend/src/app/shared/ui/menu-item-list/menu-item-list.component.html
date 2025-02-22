@@ -1,0 +1,24 @@
+@for (item of items(); track item[idName()]) {
+<div
+  [ngClass]="$first ? '' : 'border-top-1 surface-border'"
+  class="w-full flex justify-content-between align-items-center py-4">
+  <div class="flex align-items-center gap-4">
+    <p-avatar [image]="item.image" pBadge [value]="item.quantity" />
+    <div class="flex flex-column gap-1">
+      <span>{{ item.name }}</span>
+      <span>{{ item.price | currency }}</span>
+    </div>
+  </div>
+  @if(showActions()){
+  <button
+    (click)="onRemove.emit(item.idMenuItem)"
+    pButton
+    severity="danger"
+    icon="pi pi-trash"
+    rounded
+    outlined></button>
+  }
+</div>
+}@empty {
+<span class="block text-lg text-center">{{ emptyMessage() }}</span>
+}

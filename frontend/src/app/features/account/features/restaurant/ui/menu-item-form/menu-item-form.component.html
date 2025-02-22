@@ -1,0 +1,56 @@
+<form class="formgrid grid" [formGroup]="form" (ngSubmit)="submit()">
+  <div class="col-12 py-2">
+    <app-image-upload
+      [(previewSrc)]="previewSrc"
+      [disabled]="form.disabled"
+      (onUploadSuccess)="onImageUpload($event)" />
+  </div>
+  <div class="field col-12 md:col-6">
+    <label for="name">{{ 'myMenu.name' | translate }}</label>
+    <input
+      class="w-full"
+      type="text"
+      name="name"
+      id="name"
+      pInputText
+      formControlName="name" />
+  </div>
+  <div class="field col-12 md:col-6">
+    <label for="price">{{ 'myMenu.price' | translate }}</label>
+    <p-inputNumber
+      mode="currency"
+      currency="PLN"
+      locale="pl"
+      formControlName="price"
+      class="w-full"
+      styleClass="w-full"
+      type="text"
+      name="price"
+      id="price" />
+  </div>
+  <div class="field col-12">
+    <label for="description">{{ 'myMenu.description' | translate }}</label>
+    <textarea
+      formControlName="description"
+      rows="10"
+      [autoResize]="true"
+      class="w-full"
+      pInputTextarea
+      name="description"
+      id="description"></textarea>
+  </div>
+  <div class="col-12 flex flex-column gap-1">
+    <button
+      (click)="close()"
+      pButton
+      type="button"
+      severity="danger"
+      [label]="'forms.cancel' | translate"></button>
+    <button
+      [disabled]="!uploadedImage || form.invalid"
+      pButton
+      type="submit"
+      severity="success"
+      [label]="'forms.submit' | translate"></button>
+  </div>
+</form>

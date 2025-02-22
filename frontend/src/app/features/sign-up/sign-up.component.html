@@ -1,0 +1,87 @@
+<div class="h-full w-full flex justify-content-center align-items-center">
+  <p-card class="w-12 m-2 md:w-6 md:m-0" [header]="'signUp.header' | translate">
+    <form [formGroup]="signUpForm" class="flex flex-column gap-1">
+      <div class="flex flex-column gap-1">
+        <label for="name">{{ 'forms.name' | translate }}</label>
+        <input pInputText formControlName="name" id="name" />
+        @if(name.hasError('required') && (name.dirty || name.touched)){
+        <small class="input-error">{{ 'forms.required' | translate }}</small>
+        }
+      </div>
+      <div class="flex flex-column gap-1">
+        <label for="surname">{{ 'forms.surname' | translate }}</label>
+        <input pInputText formControlName="surname" id="surname" />
+        @if(surname.hasError('required') && (surname.dirty || surname.touched)){
+        <small class="input-error">{{ 'forms.required' | translate }}</small>
+        }
+      </div>
+      <div class="flex flex-column gap-1">
+        <label for="email">{{ 'forms.email' | translate }}</label>
+        <input pInputText formControlName="email" id="email" />
+        @if(email.hasError('required') && (email.dirty || email.touched)){
+        <small class="input-error">{{ 'forms.required' | translate }}</small>
+        }
+      </div>
+      <div class="flex flex-column gap-1">
+        <label for="confirmEmail">{{ 'forms.confirmEmail' | translate }}</label>
+        <input pInputText formControlName="confirmEmail" id="confirmEmail" />
+        @if(confirmEmail.hasError('required') && (confirmEmail.dirty ||
+        confirmEmail.touched)){
+        <small class="input-error">{{ 'forms.required' | translate }}</small>
+        } @if(confirmEmail.hasError('notMatch') && (confirmEmail.dirty ||
+        confirmEmail.touched)){
+        <small class="input-error">{{ 'forms.notMatch' | translate }}</small>
+        }
+      </div>
+      <div class="flex flex-column gap-1">
+        <label for="password">{{ 'forms.password' | translate }}</label>
+        <input
+          pInputText
+          type="password"
+          formControlName="password"
+          id="password" />
+        @if(password.hasError('required') && (password.dirty ||
+        password.touched)){
+        <small class="input-error">{{ 'forms.required' | translate }}</small>
+        }
+      </div>
+      <div class="flex flex-column gap-1">
+        <label for="confirmPassword">{{
+          'forms.confirmPassword' | translate
+        }}</label>
+        <input
+          pInputText
+          type="password"
+          formControlName="confirmPassword"
+          id="confirmPassword" />
+        @if(confirmPassword.hasError('required') && (confirmPassword.dirty ||
+        confirmPassword.touched)){
+        <small class="input-error">{{ 'forms.required' | translate }}</small>
+        } @if(confirmPassword.hasError('notMatch') && (confirmPassword.dirty ||
+        confirmPassword.touched)){
+        <small class="input-error">{{ 'forms.notMatch' | translate }}</small>
+        }
+      </div>
+    </form>
+    <ng-template pTemplate="footer">
+      <div class="flex justify-content-center">
+        <button
+          [disabled]="signUpForm.invalid"
+          [loading]="status() === 'loading'"
+          (click)="signUp()"
+          pButton
+          [label]="'forms.submit' | translate"></button>
+      </div>
+      @if(status() === 'success'){
+      <p-messages
+        [value]="[
+      {
+        severity: 'success',
+        summary: 'global.success' | translate,
+        detail: 'signUp.success' | translate,
+      }
+    ]"></p-messages>
+      }
+    </ng-template>
+  </p-card>
+</div>

@@ -1,0 +1,86 @@
+<div class="flex flex-column h-full">
+  @if(isClient){
+  <div
+    class="sticky top-0 z-3 w-full p-2 bg-white flex justify-content-end align-items-center">
+    <div>
+      <button
+        [loading]="status() === 'loading'"
+        (click)="openCart()"
+        pButton
+        icon="pi pi-shopping-cart"
+        rounded
+        raised
+        [label]="'global.cart' | translate"></button>
+    </div>
+  </div>
+
+  }
+  <div
+    [ngClass]="isClient ? '' : 'mt-4'"
+    class="flex-1 flex flex-column lg:flex-row pb-6 lg:pb-0 px-2 md:px-5 gap-3 lg:gap-0">
+    <app-restaurant-panel [restaurant]="restaurant" class="w-full lg:w-4" />
+    <p-divider class="hidden lg:block" layout="vertical" />
+    <div class="flex-1 flex flex-column">
+      <span class="text-2xl text-center">Menu</span>
+      <p-divider />
+      <p-accordion [activeIndex]="0" class="overflow-y-auto">
+        @for (item of restaurant.menu; track item.idImage) {
+        <p-accordionTab>
+          <ng-template pTemplate="header">
+            <div
+              class="hover:text-gray-700 w-full flex align-items-center gap-2">
+              <span class="font-light font-italic">{{ item.name }}</span>
+            </div>
+          </ng-template>
+          <ng-template pTemplate="content">
+            <div class="flex justify-content-between">
+              <div class="flex flex-column gap-2">
+                <div class="relative h-6rem w-8rem">
+                  <img
+                    [ngSrc]="item.image || 'https://placehold.co/600x400'"
+                    fill
+                    priority
+                    alt="item_name" />
+                </div>
+                <span>{{ item.description }}</span>
+              </div>
+              <button
+                [disabled]="item | appIsInCart : cart()"
+                (click)="showAmountOverlay($event, item)"
+                class="z-2"
+                [disabled]="authStatus() !== 'logged-in' || !isClient"
+                pButton
+                icon="pi pi-shopping-cart"
+                rounded
+                raised
+                severity="success"></button>
+            </div>
+          </ng-template>
+        </p-accordionTab>
+        }@empty {
+        <span class="inline-block w-full p-2 text-center">{{
+          'global.empty' | translate
+        }}</span>
+        }
+      </p-accordion>
+    </div>
+  </div>
+</div>
+<p-overlayPanel [showCloseIcon]="true" #itemAmount>
+  <div class="flex flex-column gap-2">
+    <span>{{ 'restaurant.howMany' | translate }}</span>
+    <p-inputNumber [formControl]="amount" step="1" min="1" max="20" />
+    <button
+      [disabled]="amount.invalid"
+      (click)="addToCart()"
+      pButton
+      severity="success"
+      [label]="'forms.submit' | translate"></button>
+  </div>
+</p-overlayPanel>
+<app-cart
+  [(visible)]="visible"
+  [personalData]="user()"
+  [cart]="cart()"
+  (onRemoveItemFromCart)="removeItemFromCart($event)"
+  (onFinalize)="finalize($event)" />

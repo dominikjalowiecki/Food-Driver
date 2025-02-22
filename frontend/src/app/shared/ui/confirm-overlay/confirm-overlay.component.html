@@ -1,0 +1,18 @@
+<p-overlayPanel #op>
+  <div class="flex flex-column gap-2">
+    <span>{{ 'global.confirmAction' | translate }}</span>
+    <div class="flex gap-2">
+      <button
+        (click)="op.hide()"
+        pButton
+        severity="danger"
+        [label]="'global.no' | translate"></button>
+      <button
+        (click)="onDeleteItem.emit()"
+        pButton
+        severity="success"
+        [loading]="status() === 'loading'"
+        [label]="'global.yes' | translate"></button>
+    </div>
+  </div>
+</p-overlayPanel>

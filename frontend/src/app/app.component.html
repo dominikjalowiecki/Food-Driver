@@ -1,0 +1,15 @@
+<div class="flex flex-column h-screen">
+  <app-header
+    [language]="language()"
+    [status]="status()"
+    [error]="error()"
+    (onSwitchLanguage)="selectLanguage($event)"
+    (onLogin)="login($event)"
+    (onLogout)="logout()"
+    (onForgetPassword)="forgetPassword($event)" />
+  <div class="flex-1 overflow-auto">
+    <router-outlet />
+  </div>
+</div>
+<app-footer />
+<p-toast position="bottom-center" />

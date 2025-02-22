@@ -1,0 +1,47 @@
+<p-inputGroup>
+  <input type="text" pInputText [(ngModel)]="search" />
+  <button
+    (click)="searchUser()"
+    pButton
+    severity="primary"
+    icon="pi pi-search"></button>
+</p-inputGroup>
+<app-users-table
+  [users]="users()"
+  [status]="status()"
+  [totalRecords]="totalRecords()"
+  (onEdit)="edit($event)"
+  (onPage)="changePage($event)" />
+<p-dialog
+  [style]="{ width: '40vw', height: '50vh' }"
+  [breakpoints]="{ '1499px': '50vw', '999px': '75vw', '499px': '90vw' }"
+  modal="true"
+  [(visible)]="visible"
+  [header]="'forms.edit' | translate">
+  <div class="h-full flex flex-column justify-content-between">
+    <div class="flex flex-column gap-2">
+      <span class="text-xl font-light">{{
+        selectedUser?.name + ' ' + selectedUser?.surname
+      }}</span>
+      <div class="w-full flex flex-column align-items-center gap-2">
+        <p-dropdown
+          [(ngModel)]="selectedRole"
+          [options]="roles | keyvalue"
+          [optionLabel]="'value'"
+          [optionValue]="'key'" />
+        <div class="flex align-items-center gap-2">
+          <span>{{ 'users.active' | translate }}?</span>
+          <p-toggleButton
+            [(ngModel)]="active"
+            [onLabel]="'global.yes' | translate"
+            [offLabel]="'global.no' | translate" />
+        </div>
+      </div>
+    </div>
+    <button
+      (click)="submitChanges()"
+      pButton
+      [label]="'forms.submit' | translate"
+      severity="success"></button>
+  </div>
+</p-dialog>

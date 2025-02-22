@@ -1,0 +1,25 @@
+<div class="h-full flex flex-column justify-content-center align-items-center">
+  <h2>{{ 'activateAccount.title' | translate }}</h2>
+  @if (status() === null) {
+  <p-progressSpinner />
+  } @else {
+  <p-messages
+    [value]="[
+      status() === 'success'
+        ? {
+            summary: 'global.success' | translate,
+            detail: 'activateAccount.success' | translate,
+            severity: 'success'
+          }
+        : {
+            summary: 'global.error' | translate,
+            detail: 'activateAccount.error' | translate,
+            severity: 'error'
+          }
+    ]" />
+  }
+  <button
+    pButton
+    [routerLink]="['/']"
+    [label]="'global.mainPage' | translate"></button>
+</div>

@@ -1,0 +1,32 @@
+<div class="flex flex-column md:flex-row gap-2 h-full p-2">
+  <p-menu class="hidden md:block" styleClass="h-full" [model]="links()">
+    <ng-template pTemplate="start">
+      <div class="flex flex-column gap-1 align-items-center">
+        <div
+          class="border-circle border-3 border-primary w-8rem h-8rem flex justify-content-center align-items-center">
+          <span class="pi pi-user text-7xl"></span>
+        </div>
+        <div class="w-full bg-primary border-round">
+          <h2 class="text-center">{{ userDisplay() }}</h2>
+        </div>
+      </div>
+    </ng-template>
+  </p-menu>
+  <p-menubar class="block md:hidden w-full" [model]="links()">
+    <ng-template pTemplate="end">
+      <div
+        class="flex flex-column gap-2 align-items-center justify-content-center">
+        <span class="pi pi-user text-2xl"></span>
+        <span>{{ userDisplay() }}</span>
+      </div>
+    </ng-template>
+  </p-menubar>
+  <div class="overflow-x-hidden flex-1 pb-2 md:pb-0 flex flex-column gap-2">
+    <div class="text-2xl p-2 border-1 surface-border border-round">
+      {{ label() }}
+    </div>
+    <div class="flex-1 border-1 surface-border order-round p-2">
+      <router-outlet />
+    </div>
+  </div>
+</div>

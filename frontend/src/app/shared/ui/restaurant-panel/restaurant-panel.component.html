@@ -1,0 +1,32 @@
+<div class="flex flex-column align-items-stretch gap-1">
+  <div
+    class="mx-auto relative w-20rem h-16rem lg:w-16rem lg:h-12rem border-round">
+    <img
+      [ngSrc]="restaurant().image || 'https://placehold.co/600x400'"
+      fill
+      [style]="{ objectFit: 'cover' }"
+      priority
+      alt="restaurant()_image" />
+  </div>
+  <p-panel [header]="restaurant().name">
+    <span class="font-italic text-center">{{
+      restaurant().category.name
+    }}</span>
+  </p-panel>
+  @if(restaurant().description){
+  <p-panel [header]="'myRestaurant.description' | translate">{{
+    restaurant().description
+  }}</p-panel>
+  }
+  <p-panel [header]="'global.address' | translate">
+    <span>
+      {{
+        restaurant().street +
+          ' ' +
+          restaurant().building +
+          (restaurant().apartment !== '-' ? '/' + restaurant().apartment : '')
+      }}
+    </span>
+    <p>{{ restaurant().postalCode }}, {{ restaurant().city }}</p>
+  </p-panel>
+</div>

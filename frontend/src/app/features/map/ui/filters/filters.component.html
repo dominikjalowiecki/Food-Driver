@@ -1,0 +1,42 @@
+<p-card [header]="'global.search' | translate">
+  <ng-template pTemplate="header">
+    <div class="w-full p-2 flex justify-content-between bg-primary">
+      <div class="w-1 h-1rem"></div>
+      <p-button
+        (click)="toggle()"
+        class="block md:hidden"
+        [icon]="hidden() ? 'pi pi-arrow-up' : 'pi pi-arrow-down'"></p-button>
+      <p-button
+        icon="pi pi-globe"
+        rounded
+        severity="info"
+        (click)="onSetUserLocalization.emit()"></p-button>
+    </div>
+  </ng-template>
+  <div class="flex flex-column">
+    <div class="mb-3">
+      <p class="text-center">{{ distance / 1000 }} km</p>
+      <p-slider
+        styleClass="w-full"
+        [step]="1000"
+        [min]="1000"
+        [max]="25000"
+        [(ngModel)]="distance" />
+    </div>
+    @if(!isDelivery){
+    <p-dropdown
+      styleClass="w-full"
+      [showClear]="true"
+      [placeholder]="'filters.chooseCategory' | translate"
+      [options]="options()"
+      optionLabel="name"
+      [(ngModel)]="selectedCategory" />
+    }
+    <button
+      class="mt-3"
+      pButton
+      [label]="'global.search' | translate"
+      raised
+      (click)="search()"></button>
+  </div>
+</p-card>

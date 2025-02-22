@@ -1,0 +1,12 @@
+<div class="flex flex-column">
+  <div class="align-self-end sticky top-0 w-full z-3 bg-white py-1">
+    <app-orders-filters [filters]="filters()" (onFilter)="filter($event)" />
+  </div>
+  <app-orders-table
+    (onPage)="changePage($event)"
+    [status]="status()"
+    [orders]="orders()"
+    [columnsNames]="['restaurantName', 'categoryName']"
+    [columnsValues]="['restaurant.name', 'restaurant.category.name']">
+  </app-orders-table>
+</div>

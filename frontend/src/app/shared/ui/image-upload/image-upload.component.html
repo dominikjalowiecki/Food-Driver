@@ -1,0 +1,46 @@
+<div class="flex flex-column md:flex-row align-items-center gap-1">
+  @if (previewSrc()) {
+  <div class="relative">
+    @if(fileUploader.hasFiles()){
+    <div class="absolute top-0 left-0 p-2 z-4">
+      <button
+        (click)="clear()"
+        pButton
+        severity="danger"
+        type="button"
+        [label]="'global.delete' | translate"></button>
+    </div>
+    }
+    <p-image
+      [src]="previewSrc()"
+      alt="preview_image"
+      [width]="small() ? '150' : '300'"
+      [preview]="true"
+      [appendTo]="'body'" />
+  </div>
+  }
+  <div
+    [ngClass]="previewSrc() ? 'flex-1' : ''"
+    class="flex flex-column gap-2 align-items-center">
+    <p-fileUpload
+      mode="basic"
+      chooseIcon="pi pi-upload"
+      accept="image/*"
+      [disabled]="disabled() || status() === 'success'"
+      [customUpload]="true"
+      [chooseLabel]="'global.choose' | translate"
+      [maxFileSize]="maxFileSize"
+      (onSelect)="onFileSelect($event)"
+      (uploadHandler)="onFileUpload($event)"
+      #fileUploader />
+    @if(status() === 'success'){
+    <small class="text-green-400 font-italic"
+      >Udało się załadować zdjęcie</small
+    >
+    }@else if (status() === 'loading') {
+    <p-progressSpinner styleClass="w-2rem h-2rem" />
+    } @if (previewSrc() && selected) {
+    <small class="font-italic">Naciśnij by potwierdzić wybór</small>
+    }
+  </div>
+</div>

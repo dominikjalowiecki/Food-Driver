@@ -1,0 +1,113 @@
+<header
+  class="p-2 px-2 md:px-4 flex flex-wrap justify-content-between align-items-center border-bottom-2 border-primary shadow-1">
+  <a
+    routerLink="/"
+    class="text-2xl text-600 hover:text-900 transition-duration-150 w-full md:w-auto text-center md:text-left font-light">
+    Food driver
+  </a>
+  <div
+    class="mt-2 md:mt-0 w-full md:w-auto flex justify-content-center md:justify-content-end gap-1">
+    @if(status() === 'logged-in'){
+    <button
+      severity="info"
+      pButton
+      routerLink="/account/me"
+      icon="pi pi-user"
+      [label]="'header.account' | translate"></button>
+    <button
+      pButton
+      icon="pi pi-sign-out"
+      [label]="'header.logout' | translate"
+      (click)="logout()"></button>
+    }@else{
+    <p-buttonGroup>
+      <button
+        pButton
+        [label]="'header.login' | translate"
+        [loading]="status() == 'loading'"
+        (click)="loginOp.show($event)"></button>
+      <button
+        pButton
+        routerLink="/sign-up"
+        [label]="'header.register' | translate"></button>
+    </p-buttonGroup>
+    }
+    <p-button
+      [label]="language()"
+      icon="pi pi-language"
+      outlined
+      rounded
+      (onClick)="switchLanguage()" />
+  </div>
+</header>
+<p-overlayPanel #loginOp (onHide)="setLoginMode()">
+  @if(loginMode){
+  <form [formGroup]="loginForm" class="flex flex-column gap-1">
+    <div class="flex flex-column">
+      <label for="email">{{ 'forms.email' | translate }}</label>
+      <input formControlName="email" pInputText id="email" />
+      @if (email.hasError('required') && (email.dirty || email.touched)) {
+      <small class="input-error">{{ 'forms.required' | translate }}</small>
+      }
+    </div>
+    <div class="flex flex-column">
+      <label for="password">{{ 'forms.password' | translate }}</label>
+      <input
+        formControlName="password"
+        pInputText
+        type="password"
+        id="password" />
+      @if (password.hasError('required') && (password.dirty ||
+      password.touched)) {
+      <small class="input-error">{{ 'forms.required' | translate }}</small>
+      }
+    </div>
+    <button
+      [disabled]="loginForm.invalid"
+      pButton
+      severity="success"
+      [label]="'forms.submit' | translate"
+      (click)="login(); loginOp.hide()"></button>
+  </form>
+  <div class="flex justify-content-end">
+    <p-button
+      styleClass="text-sm"
+      [link]="true"
+      (click)="setForgetPasswordMode()"
+      [label]="'login.forgetPassword' | translate"></p-button>
+  </div>
+  } @else {
+  <div class="flex flex-column gap-1">
+    <p-inputGroup class="w-full">
+      <input
+        [placeholder]="'forms.email' | translate"
+        pInputText
+        [formControl]="forgetPassword"
+        type="email"
+        name="forgetPassword"
+        id="forgetPassword" />
+      <button
+        [disabled]="
+          forgetPassword.hasError('required') ||
+          forgetPassword.hasError('email')
+        "
+        type="button"
+        (click)="submitForgetPassword()"
+        [loading]="status() === 'loading'"
+        pButton
+        icon="pi pi-check"
+        class="p-button-success"></button>
+    </p-inputGroup>
+    @if(status() === 'password-reset-send'){
+    <p class="text-sm text-green-400 font-italic">
+      {{ 'passwordReset.send' | translate }}
+    </p>
+    }
+    <p-button
+      styleClass="text-sm"
+      [link]="true"
+      (click)="setLoginMode()"
+      [label]="'global.back' | translate"></p-button>
+  </div>
+  }
+</p-overlayPanel>

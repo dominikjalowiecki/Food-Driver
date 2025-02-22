@@ -1,0 +1,9 @@
+<div class="flex flex-column gap-2">
+  <app-image-upload (onUploadSuccess)="setImage($event)" />
+  <textarea pInputTextarea [formControl]="message" rows="15"></textarea>
+  <button
+    (click)="submit()"
+    pButton
+    severity="success"
+    [label]="'forms.submit' | translate"></button>
+</div>

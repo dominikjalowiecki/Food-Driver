@@ -1,0 +1,6 @@
+:host {
+  display: block;
+}
+:host ::ng-deep .p-image-preview-container > img {
+  object-fit: cover;
+}

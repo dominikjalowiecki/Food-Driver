@@ -1,0 +1,42 @@
+<p-table
+  responsiveLayout="scroll"
+  [lazy]="true"
+  [loading]="status() === 'loading'"
+  [paginator]="true"
+  [rows]="rows()"
+  [totalRecords]="orders()?.count || 0"
+  [value]="value()"
+  (onPage)="onPage.emit($event)">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>{{ 'restaurantOrders.status' | translate }}</th>
+      <th>{{ 'restaurantOrders.payment' | translate }}</th>
+      <th>{{ 'restaurantOrders.reported' | translate }}</th>
+      <th>{{ 'restaurantOrders.created' | translate }}</th>
+      @for (name of columnsNames(); track $index) {
+      <th>{{ 'restaurantOrders.' + name | translate }}</th>
+      }
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-order>
+    <tr
+      class="hover:surface-100 cursor-pointer"
+      [routerLink]="['/orders', order.idOrder]">
+      <td>{{ order.status }}</td>
+      <td>{{ order.payment | currency }}</td>
+      <td>
+        <p-tag
+          [value]="
+            order.reported
+              ? ('global.yes' | translate)
+              : ('global.no' | translate)
+          "
+          [severity]="order.reported ? 'danger' : 'success'" />
+      </td>
+      <td>{{ order.created | date : 'short' }}</td>
+      @for (value of columnsValues(); track $index) {
+      <td>{{ order | appOrderPropertyAccess : value }}</td>
+      }
+    </tr>
+  </ng-template>
+</p-table>

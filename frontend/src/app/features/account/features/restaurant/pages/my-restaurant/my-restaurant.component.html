@@ -1,0 +1,126 @@
+<div class="flex flex-column gap-2 align-items-center p-2">
+  <app-image-upload
+    #fileUploader
+    [previewSrc]="previewSrc"
+    [disabled]="form.disabled"
+    (onUploadSuccess)="onImageUpload($event)" />
+  <form [formGroup]="form" class="formgrid grid" (ngSubmit)="submit()">
+    <div class="field col-12 md:col-6">
+      <label for="name">{{ 'myRestaurant.name' | translate }}</label>
+      <input
+        class="w-full"
+        type="text"
+        name="name"
+        id="name"
+        pInputText
+        formControlName="name" />
+    </div>
+    <div class="field col-12 md:col-6">
+      <label for="description">{{
+        'myRestaurant.description' | translate
+      }}</label>
+      <input
+        class="w-full"
+        type="text"
+        name="description"
+        id="description"
+        pInputText
+        formControlName="description" />
+    </div>
+    <div class="field col-12 md:col-6">
+      <label for="category">{{ 'myRestaurant.category' | translate }}</label>
+      <p-dropdown
+        styleClass="w-full"
+        class="w-full"
+        [options]="categories()"
+        optionLabel="name"
+        formControlName="category" />
+    </div>
+    <div class="field col-12 md:col-6">
+      <label for="street">{{ 'myRestaurant.street' | translate }}</label>
+      <input
+        class="w-full"
+        type="text"
+        name="street"
+        id="street"
+        pInputText
+        formControlName="street" />
+    </div>
+    <div class="field col-12 md:col-6">
+      <label for="building">{{ 'myRestaurant.building' | translate }}</label>
+      <input
+        class="w-full"
+        type="text"
+        name="building"
+        id="building"
+        pInputText
+        formControlName="building" />
+    </div>
+    <div class="field col-12 md:col-6">
+      <label for="apartment">{{ 'myRestaurant.apartment' | translate }}</label>
+      <input
+        class="w-full"
+        type="text"
+        name="apartment"
+        id="apartment"
+        pInputText
+        formControlName="apartment" />
+    </div>
+    <div class="field col-12 md:col-6">
+      <label for="postalCode">{{
+        'myRestaurant.postalCode' | translate
+      }}</label>
+      <input
+        class="w-full"
+        type="text"
+        name="postalCode"
+        id="postalCode"
+        pInputText
+        formControlName="postalCode" />
+    </div>
+    <div class="field col-12 md:col-6">
+      <label for="city">{{ 'myRestaurant.city' | translate }}</label>
+      <input
+        class="w-full"
+        type="text"
+        name="city"
+        id="city"
+        pInputText
+        formControlName="city" />
+    </div>
+    @if(!editMode){
+    <div class="col-12 md:col-6">
+      <button
+        class="w-full"
+        type="button"
+        pButton
+        severity="info"
+        [label]="'forms.edit' | translate"
+        (click)="edit()"></button>
+    </div>
+    } @else {
+    <div class="col-12 md:col-6">
+      <button
+        class="w-full"
+        type="button"
+        pButton
+        severity="danger"
+        [label]="'forms.cancel' | translate"
+        (click)="cancel()"></button>
+    </div>
+    <div class="col-12 md:col-6 mt-2 md:mt-0">
+      <button
+        class="w-full"
+        type="submit"
+        pButton
+        severity="success"
+        [disabled]="
+          form.invalid ||
+          (!(form.dirty && form.touched) && !uploadedImage) ||
+          (!uploadedImage && !previewSrc)
+        "
+        [label]="'forms.submit' | translate"></button>
+    </div>
+    }
+  </form>
+</div>

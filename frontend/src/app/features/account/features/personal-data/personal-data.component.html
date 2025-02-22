@@ -1,0 +1,88 @@
+<div class="p-2">
+  <form (ngSubmit)="submit()" [formGroup]="form" class="formgrid grid">
+    <div class="field col-12 md:col-6">
+      <label for="name">{{ 'forms.name' | translate }}</label>
+      <input class="w-full" pInputText formControlName="name" />
+    </div>
+    <div class="field col-12 md:col-6">
+      <label for="surname">{{ 'forms.surname' | translate }}</label>
+      <input class="w-full" pInputText formControlName="surname" />
+    </div>
+    <div class="field col-12 md:col-6">
+      <label for="email">{{ 'forms.email' | translate }}</label>
+      <input class="w-full" pInputText formControlName="email" />
+    </div>
+    <div class="field col-12 md:col-6">
+      <label for="street">{{ 'forms.street' | translate }}</label>
+      <input class="w-full" pInputText formControlName="street" />
+    </div>
+    <div class="field col-12 md:col-6">
+      <label for="building">{{ 'forms.building' | translate }}</label>
+      <p-inputNumber
+        class="inline-block w-full"
+        styleClass="w-full"
+        formControlName="building" />
+    </div>
+    <div class="field col-12 md:col-6">
+      <label for="apartment">{{ 'forms.apartment' | translate }}</label>
+      <p-inputNumber
+        class="inline-block w-full"
+        styleClass="w-full"
+        formControlName="apartment" />
+    </div>
+    <div class="field col-12 md:col-6">
+      <label for="postalCode">{{ 'forms.postalCode' | translate }}</label>
+      <p-inputMask
+        mask="99-999"
+        [placeholder]="updateMode ? 'xx-xxx' : undefined"
+        class="inline-block w-full"
+        styleClass="w-full"
+        formControlName="postalCode" />
+    </div>
+    <div class="field col-12 md:col-6">
+      <label for="city">{{ 'forms.city' | translate }}</label>
+      <input class="w-full" pInputText formControlName="city" />
+    </div>
+    @if (!updateMode) {
+    <div class="col-12 md:col-6">
+      <button
+        (click)="enableFields()"
+        class="w-full"
+        type="button"
+        severity="info"
+        pButton
+        [label]="'personalData.update' | translate"></button>
+    </div>
+    } @else{
+    <div class="col-12 md:col-6">
+      <button
+        (click)="disableFields()"
+        class="w-full"
+        type="button"
+        severity="warning"
+        pButton
+        [label]="'forms.cancel' | translate"></button>
+    </div>
+    <div class="col-12 md:col-6 mt-2 md:mt-0">
+      <button
+        [loading]="status() === 'loading'"
+        class="w-full"
+        type="submit"
+        severity="success"
+        pButton
+        [label]="'forms.submit' | translate"></button>
+    </div>
+    }
+  </form>
+  @if (status() === 'success') {
+  <p-messages
+    [value]="[
+      {
+        severity: 'success',
+        summary: 'global.success' | translate,
+        detail: 'updateMe.success' | translate
+      }
+    ]">
+  </p-messages>
+  }
+</div>
